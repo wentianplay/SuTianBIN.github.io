@@ -1,118 +1,118 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="57">
-    <title>苏天彬ソテンアキラ｜文天玩WenTianPlay</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f0f8f5; color: #333; line-height: 1.6; }
-        :root {
-            --primary-color: #1abc9c;
-            --primary-dark: #16a085;
-            --light-bg: #e8f6f3;
-            --text-color: #2c3e50;
-            --light-text: #7f8c8d;
-            --border-color: #d1e8e2;
-        }
-        .announcement { background-color: var(--primary-color); color: white; padding: 0.8rem 2rem; text-align: center; font-weight: bold; }
-        header { background-color: var(--primary-dark); color: white; padding: 1.5rem 2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
-        h1 { margin-bottom: 0.5rem; font-size: 2.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-        .subtitle { color: #ecf0f1; font-weight: normal; font-size: 1.1rem; }
-        .refresh-info { background-color: var(--light-bg); padding: 10px; border-radius: 5px; text-align: center; margin: 1rem 0; color: var(--primary-dark); font-weight: bold; border: 1px dashed var(--primary-color); }
-        .news-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
-        .news-card { background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 15px rgba(0,0,0,0.08); transition: all 0.3s ease; border-left: 4px solid var(--primary-color); }
-        .news-card:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .news-content { padding: 1.8rem; }
-        .news-date { color: var(--primary-dark); font-size: 0.9rem; margin-bottom: 0.8rem; font-weight: 600; display: flex; align-items: center; }
-        .news-date::before { content: "🍃"; margin-right: 8px; }
-        .news-title { font-size: 1.5rem; margin-bottom: 1.2rem; color: var(--text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; }
-        .news-excerpt { color: var(--light-text); line-height: 1.7; margin-bottom: 1.5rem; font-size: 1.05rem; }
-        .read-more { display: inline-block; background-color: var(--primary-color); color: white; text-decoration: none; padding: 0.7rem 1.5rem; border-radius: 4px; font-weight: bold; transition: background-color 0.3s ease; border: none; cursor: pointer; font-size: 1rem; }
-        .read-more:hover { background-color: var(--primary-dark); }
-        .loading { text-align: center; padding: 2rem; font-size: 1.2rem; color: var(--light-text); }
-        footer { text-align: center; padding: 2rem; color: var(--light-text); font-size: 0.9rem; margin-top: 2rem; border-top: 1px solid var(--border-color); }
-        @media (max-width: 768px) {
-            .container { padding: 1rem; }
-            .announcement { padding: 0.8rem 1rem; font-size: 0.9rem; }
-            .news-content { padding: 1.2rem; }
-            .news-title { font-size: 1.3rem; }
-        }
-    </style>
-</head>
-<body>
-    <div class="announcement">文天玩WenTianPlay - 公告资讯</div>
-    <header>
-        <div class="container">
-            <h1>文天玩公告资讯</h1>
-            <p class="subtitle">游戏开发 · 娱乐活动 · 公告通知</p>
-        </div>
-    </header>
-    <div class="container">
-        <div class="refresh-info">页面每 57 秒自动刷新一次 | 最后刷新时间: <span id="refreshTime"></span></div>
-        <div class="news-list" id="newsList">
-            <div class="loading">加载中...</div>
-        </div>
-    </div>
-    <footer>
-        <p>文天玩工作日志 &copy; 2025 | 不忘初心，逐梦未来</p>
-    </footer>
-    <script>
+<html>
+ <script>
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+        });
 
-        function updateRefreshTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            document.getElementById('refreshTime').textContent = timeString;
-        }
-        updateRefreshTime();
-        setInterval(updateRefreshTime, 1000);
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "F12") {
+                e.preventDefault();
+            }
+        });
 
-
-        fetch('https://www.wentianplay.top/op.json')
-            .then(response => {
-                if (!response.ok) throw new Error('网络响应不正常，请稍后尝试。');
-                return response.json();
-            })
-            .then(diaryData => {
-                const newsList = document.getElementById('newsList');
-                newsList.innerHTML = '';
-
-                diaryData.diaries.forEach(diary => {
-                    const newsCard = document.createElement('div');
-                    newsCard.className = 'news-card';
-
-                    const date = new Date(diary.updateTime);
-                    const year = date.getFullYear();
-                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                    const day = date.getDate().toString().padStart(2, '0');
-
-                    const formattedDate = `${year}年${month}月${day}日 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-
-
-                    const filePath = `https://www.wentianplay.top/t/${year}${month}${day}.html`;
-
-                    newsCard.innerHTML = `
-                        <div class="news-content">
-                            <div class="news-date">${formattedDate}</div>
-                            <h3 class="news-title">${diary.title}</h3>
-                            <p class="news-excerpt">${diary.excerpt}</p>
-                            <a href="${filePath}" class="read-more">阅读全文 →</a>
-                        </div>
-                    `;
-
-                    newsList.appendChild(newsCard);
-                });
-            })
-            .catch(error => {
-                const newsList = document.getElementById('newsList');
-                newsList.innerHTML = `<div class="loading">加载失败: ${error.message}</div>`;
-                console.error('获取日志数据时出错:', error);
-            });
-
-        // 每57秒刷新内容
-        setInterval(() => location.reload(), 57000);
+        document.addEventListener("copy", function(e) {
+            e.preventDefault();
+        });
     </script>
-</body>
+        <head>
+
+                <title>苏天彬ソテンアキラ｜关于文天玩WenTianPlay
+</title>
+                                <meta charset="utf-8" />
+                                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+                                <link rel="stylesheet" href="https://www.wentianplays.com/web/index/team/main.css" />
+                                <link rel="shortcut icon" href="https://www.wentianplays.com/web/index/team/wentianplay.ico"/>
+                                <noscript><link rel="stylesheet" href="https://www.wentianplays.com/web/index/team/noscript.css" /></noscript>
+                        </head>
+                <body class="is-preload">
+
+                        <!-- Wrapper -->
+                                <div id="wrapper">
+
+                                        <!-- Header -->
+                                                <header id="header" class="alt">
+                                                        <a href="./index.html" class="logo"><strong>之天玩WenTianPlay</strong> <span> 官方网站</span></a>
+                                                        <nav>
+                                                                <a href="#menu">菜单</a>
+                                                        </nav>
+                                                </header>
+
+                                        <!-- Menu -->
+                                                <nav id="menu">
+                                                        <ul class="links">
+                                                                <li><a href="./index.html">首页</a></li>
+                                                                <li><a href="./team.html">团队</a></li>
+                                                                <li><a href="./bg.html">公告资讯</a></li>
+                                                        </ul>
+                                                </nav>
+
+                                        <section id="banner" class="style6">
+                                                <div class="inner">
+                                                        <span class="image">
+                                                                <img src="https://www.wentianplays.com/web/index/team/WenTian Play.jpg" alt="" />
+                                                        </span>
+                                                        <header class="major">
+                                                                <h1>文天玩 WenTianPlay</h1>
+                                                        </header>
+                                                        <div class="content">
+                                                                <p>辛勤付出的文天玩WenTianPlay团队<br><sub>联合创始人</sub></p>
+                                                        </div>
+                                                </div>
+                                        </section>
+
+                                        <div id="main">
+                                        <div class="inner">
+                                                <header class="major">
+                                                <h3><a href="https://space.bilibili.com/1607684364/">①发起创始人:苏天彬(真名:李文飞) 财务负责人、执行董事、经理</a></h3>
+                                                </header>
+                                                <div class="row">
+                                                        <div class="col-6 col-12-small">
+                                                                <p><span class="image left"><img src="https://www.wentianplays.com/web/index/team/苏天彬.png" alt="" /></span>昵称:苏天彬(真名:李文飞)，UID：Wenfei_<br>文天玩WenTianPlay发起创始人,财务负责人、执行董事、经理.来自于湖北省天门市,2008年,生日2月29日,持股57%</p>
+                                                        </div>
+                                                </div>
+<!-- Main -->
+                                        <div id="main">
+                                        <div class="inner">
+                                                <header class="major">
+                                                <h3><a href="https://space.bilibili.com/3493294076069942/">②联合创始人:梦雕(真名:罗鼎洋) 首席运营官(COO)</a></h3>
+                                                </header>
+                                                <div class="row">
+                                                        <div class="col-6 col-12-small">
+                                                                <p><span class="image left"><img src="https://www.wentianplays.com/web/index/team/梦雕.png" alt="" /></span>昵称:梦雕(真名:罗鼎洋)
+，UID：Meng_Diao<br>文天玩WenTianPlay联合创始人,首席运营官(COO).来自于湖北省荆州市,2006年,生日3月31日,持股22%</p>
+                                                        </div>
+                                                </div>
+                                        <div id="main">
+                                        <div class="inner">
+                                                <header class="major">
+                                                <h3><a href="https://space.bilibili.com/3493279549098139/">③联合创始人:小皓(真名:洪文皓)  监事(合规监督、风险控制)</a></h3>
+                                                </header>
+                                                <div class="row">
+                                                        <div class="col-6 col-12-small">
+                                                                <p><span class="image left"><img src="https://www.wentianplays.com/web/index/team/小皓.png" alt="" /></span>昵称:小皓(真名:洪文皓)
+，UID：Xiao_Hao<br>文天玩WenTianPlay联合创始人,监事(合规监督、风险控制).来自于湖北省武汉市,2008年,生日2月9日,持股21%</p>
+                                                        </div>
+                                                </div>
+
+
+</div>
+                                        <div class="col-6 col-12-small">
+                                                <ul class="actions stacked">
+                                                <li><a href="index.html" class="button primary fit">返回官方主页</a></li>
+                                                </ul>
+                                        </div>
+                                <!-- Footer -->
+                                        <footer id="footer">
+                                                <div class="inner">
+                                                        <ul class="copyright">
+                                                                <li>由<strong>文天玩</strong>WenTianPlay</li><li>All Rights Reserved</li><li><a href="https://space.bilibili.com/1607684364/">正在备案中…</a></li>
+                        <script src="https://www.wentianplays.com/web/index/team/jquery.min.js"></script>
+                        <script src="https://www.wentianplays.com/web/index/team/jquery.scrolly.min.js"></script>
+                        <script src="https://www.wentianplays.com/web/index/team/jquery.scrollex.min.js"></script>
+                        <script src="https://www.wentianplays.com/web/index/team/browser.min.js"></script>
+                        <script src="https://www.wentianplays.com/web/index/team/breakpoints.min.js"></script>
+                        <script src="https://www.wentianplays.com/web/index/team/util.js"></script>
+                        <script src="https://www.wentianplays.com/web/index/team/main.js"></script>
+
+        </body>
 </html>
